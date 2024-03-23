@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="login-form">
+            <input type="text" id="login" name="login" placeholder="Login">
+            <input type="password" id="password" name="password" placeholder="Password">
+            <div class="error-message" id="error-message"></div>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+</body>
+
+
+<script>
+    document.getElementById("login-form").addEventListener("submit", function(event) { 
+        event.preventDefault();
+
+        var login = document.getElementById("login").value;
+        var password = document.getElementById("password").value;
+
+        fetch("/persistence-app/api/users/auth", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({login:"login",password:"password"})
+        })
+        .then(response => {
+            if (response.ok) {
+                // Authentication successful, redirect to dashboard or perform other actions
+                alert("Login successful!");
+                console.log(response);
+                // You can redirect the user to another page here
+            } else {
+                // Authentication failed, display error message
+                document.getElementById("error-message").textContent = "Invalid username or password.";
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            document.getElementById("error-message").textContent = "An error occurred. Please try again later.";
+        });
+    });
+</script>
+
+</html>
